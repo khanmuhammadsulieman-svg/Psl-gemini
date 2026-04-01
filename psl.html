@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSL 2026 | Match Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ms-green: #006a4e;
+            --ms-gold: #c5a059;
+            --accent-neon: #00ff88;
+            --bg-dark: #05080a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at top right, #003326, transparent);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        /* Header Style */
+        .main-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+        }
+        .main-header h1 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 4rem;
+            margin: 0;
+            letter-spacing: 4px;
+            background: linear-gradient(to right, #fff, var(--ms-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+        /* Today's Match Hero Card */
+        .hero-match {
+            background: linear-gradient(135deg, rgba(0, 106, 78, 0.2), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            border: 1px solid var(--ms-gold);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-match::before {
+            content: "TODAY'S BIG CLASH";
+            position: absolute;
+            top: 20px; left: 20px;
+            font-family: 'Bebas Neue';
+            color: var(--ms-gold);
+            letter-spacing: 2px;
+        }
+
+        .hero-teams {
+            font-family: 'Bebas Neue';
+            font-size: 3.5rem;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .vs { font-size: 1.5rem; color: var(--ms-gold); }
+
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .timer-circle {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            width: 80px; height: 80px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .timer-circle span:first-child { font-size: 1.8rem; font-weight: bold; }
+        .timer-circle span:last-child { font-size: 0.7rem; color: var(--ms-gold); text-transform: uppercase; }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .tab-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: #ccc;
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Bebas Neue';
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            background: var(--ms-green);
+            color: white;
+            border-color: var(--accent-neon);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        /* Lists and Cards */
+        .tab-panel { display: none; animation: slideUp 0.4s ease forwards; }
+        .tab-panel.active { display: block; }
+
+        .match-list { display: grid; gap: 15px; }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: scale(1.01); border-color: rgba(255,255,255,0.3); }
+
+        /* Multan Sultan Specific */
+        .ms-highlight {
+            border-left: 6px solid var(--accent-neon) !important;
+            background: linear-gradient(90deg, rgba(0, 106, 78, 0.3), var(--glass));
+            border-color: var(--ms-gold);
+        }
+
+        .score-box { text-align: right; }
+        .result-text { color: var(--accent-neon); font-size: 0.85rem; font-weight: bold; margin-top: 5px; }
+        .mom-badge {
+            background: var(--ms-gold);
+            color: black;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        /* Squads Grid */
+        .squad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .squad-card {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--glass-border);
+        }
+        .squad-card h3 { 
+            font-family: 'Bebas Neue'; 
+            color: var(--ms-gold); 
+            font-size: 1.8rem; 
+            border-bottom: 1px solid var(--glass-border);
+            margin-top: 0;
+            padding-bottom: 10px;
+        }
+        .player-list { list-style: none; padding: 0; font-size: 0.9rem; line-height: 1.8; opacity: 0.9; }
+        .captain { color: var(--accent-neon); font-weight: bold; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-teams { font-size: 2rem; }
+            .card { flex-direction: column; text-align: center; gap: 15px; }
+            .score-box { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header">
+    <h1>PAKISTAN SUPER LEAGUE 2026</h1>
+</header>
+
+<div class="container">
+    <section class="hero-match">
+        <div class="hero-teams">
+            <span>MULTAN SULTANS</span>
+            <span class="vs">VS</span>
+            <span>HYDERABAD KINGSMEN</span>
+        </div>
+        <div style="font-size: 1.1rem; color: #ddd; margin-bottom: 10px;">
+            Gaddafi Stadium, Lahore | 07:00 PM PKT
+        </div>
+
+        <div class="timer-container">
+            <div class="timer-circle"><span id="hr">00</span><span>Hrs</span></div>
+            <div class="timer-circle"><span id="mn">00</span><span>Min</span></div>
+            <div class="timer-circle"><span id="sc">00</span><span>Sec</span></div>
+        </div>
+    </section>
+
+    <nav class="nav-tabs">
+        <button class="tab-btn active" onclick="showTab('recent')">Recent Results</button>
+        <button class="tab-btn" onclick="showTab('next')">Next Matches</button>
+        <button class="tab-btn" onclick="showTab('squads')">Squads</button>
+    </nav>
+
+    <div id="recent" class="tab-panel active">
+        <div class="match-list" id="recent-list">
+            </div>
+    </div>
+
+    <div id="next" class="tab-panel">
+        <div class="match-list" id="upcoming-list">
+            </div>
+    </div>
+
+    <div id="squads" class="tab-panel">
+        <div class="squad-grid">
+            <div class="squad-card ms-highlight">
+                <h3>Multan Sultans</h3>
+                <ul class="player-list">
+                    <li><span class="captain">C:</span> Mohammad Rizwan</li>
+                    <li>Iftikhar Ahmed, Usama Mir, Abbas Afridi</li>
+                    <li>Reeza Hendricks, David Willey, Dawid Malan</li>
+                    <li>Shahnawaz Dahani, Mohammad Ali</li>
+                </ul>
+            </div>
+            <div class="squad-card">
+                <h3>Islamabad United</h3>
+                <ul class="player-list">
+                    <li><span class="captain">C:</span> Shadab Khan</li>
+                    <li>Naseem Shah, Imad Wasim, Alex Hales</li>
+                    <li>Colin Munro, Azam Khan, Tymal Mills</li>
+                </ul>
+            </div>
+            <div class="squad-card">
+                <h3>Lahore Qalandars</h3>
+                <ul class="player-list">
+                    <li><span class="captain">C:</span> Shaheen Afridi</li>
+                    <li>Fakhar Zaman, Haris Rauf, Rashid Khan</li>
+                    <li>David Wiese, Sikandar Raza, Zaman Khan</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // MATCH DATA
+    const recentMatches = [
+        { date: "Mar 31", teams: "Islamabad United vs Peshawar Zalmi", score: "Abandoned", result: "Rain Intervention", mom: "N/A", ms: false },
+        { date: "Mar 29", teams: "Lahore Qalandars vs Karachi Kings", score: "LQ: 128/9 | KK: 131/6", result: "Karachi Kings won by 4 wickets", mom: "Adam Zampa", ms: false },
+        { date: "Mar 28", teams: "Multan Sultans vs Islamabad United", score: "MS: 175/5 | IU: 171/8", result: "Sultans won by 5 wickets", mom: "Momin Qamar", ms: true },
+        { date: "Mar 27", teams: "Quetta Gladiators vs Karachi Kings", score: "QG: 167/7 | KK: 181/7", result: "Kings won by 14 runs", mom: "Moeen Ali", ms: false }
+    ];
+
+    const upcomingMatches = [
+        { date: "April 02", time: "02:30 PM", teams: "Islamabad United vs Quetta Gladiators", venue: "Gaddafi Stadium", ms: false },
+        { date: "April 02", time: "07:00 PM", teams: "Rawalpindiz vs Karachi Kings", venue: "Gaddafi Stadium", ms: false },
+        { date: "April 03", time: "07:00 PM", teams: "Multan Sultans vs Lahore Qalandars", venue: "Gaddafi Stadium", ms: true },
+        { date: "April 04", time: "07:00 PM", teams: "Rawalpindiz vs Islamabad United", venue: "Gaddafi Stadium", ms: false }
+    ];
+
+    // RENDERING LOGIC
+    function renderData() {
+        // Render Recent
+        const recentCont = document.getElementById('recent-list');
+        recentMatches.forEach(m => {
+            recentCont.innerHTML += `
+                <div class="card ${m.ms ? 'ms-highlight' : ''}">
+                    <div>
+                        <div style="font-size: 0.75rem; opacity: 0.6;">${m.date}</div>
+                        <div style="font-family: 'Bebas Neue'; font-size: 1.4rem;">${m.teams}</div>
+                        <span class="mom-badge">⭐ MOM: ${m.mom}</span>
+                    </div>
+                    <div class="score-box">
+                        <div style="font-weight: bold;">${m.score}</div>
+                        <div class="result-text">${m.result}</div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Render Upcoming
+        const upcomingCont = document.getElementById('upcoming-list');
+        upcomingMatches.forEach(m => {
+            upcomingCont.innerHTML += `
+                <div class="card ${m.ms ? 'ms-highlight' : ''}">
+                    <div>
+                        <div style="font-family: 'Bebas Neue'; font-size: 1.4rem;">${m.teams}</div>
+                        <div style="font-size: 0.8rem; color: var(--ms-gold);">${m.venue}</div>
+                    </div>
+                    <div class="score-box">
+                        <div style="font-weight: bold;">${m.date}</div>
+                        <div style="color: #00ff88;">${m.time}</div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // TAB LOGIC
+    function showTab(id) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    // TIMER LOGIC
+    function startTimer() {
+        const target = new Date("April 1, 2026 19:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const diff = target - now;
+            if (diff < 0) return;
+
+            document.getElementById('hr').innerText = Math.floor((diff / (1000 * 60 * 60)) % 24).toString().padStart(2, '0');
+            document.getElementById('mn').innerText = Math.floor((diff / 1000 / 60) % 60).toString().padStart(2, '0');
+            document.getElementById('sc').innerText = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
+        }, 1000);
+    }
+
+    window.onload = () => {
+        renderData();
+        startTimer();
+    };
+</script>
+
+</body>
+</html>
