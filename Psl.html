@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSL 2026 Hub | Multan Sultans Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ms-green: #006a4e;
+            --ms-gold: #c5a059;
+            --dark-bg: #0a0f0d;
+            --card-bg: #16211c;
+            --text-white: #e0e0e0;
+            --highlight: #00ff88;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-white);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--ms-green), #004d39);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--ms-gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        h1 { font-family: 'Orbitron', sans-serif; margin: 0; letter-spacing: 2px; }
+
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+
+        /* Today's Match Section */
+        .today-match-card {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            border: 2px solid var(--ms-gold);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .today-match-card h2 { color: var(--ms-gold); font-size: 2rem; margin-bottom: 10px; }
+        
+        .timer-box {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .timer-unit {
+            background: var(--ms-green);
+            padding: 10px 15px;
+            border-radius: 8px;
+            min-width: 60px;
+            border: 1px solid var(--ms-gold);
+        }
+
+        .timer-val { display: block; font-size: 1.8rem; font-weight: bold; font-family: 'Orbitron'; }
+        .timer-label { font-size: 0.8rem; text-transform: uppercase; color: var(--ms-gold); }
+
+        .match-details { font-size: 1.2rem; color: var(--highlight); }
+
+        /* Tabs Styling */
+        .tabs { display: flex; justify-content: center; margin-bottom: 20px; border-bottom: 1px solid #333; }
+        .tab-btn {
+            padding: 12px 25px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--text-white);
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .tab-btn.active { color: var(--ms-gold); border-bottom: 3px solid var(--ms-gold); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
+
+        /* Card Lists */
+        .match-card {
+            background: var(--card-bg);
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid transparent;
+        }
+        
+        .multan-sultans-highlight {
+            border-left: 5px solid var(--highlight);
+            background: linear-gradient(90deg, #006a4e33, var(--card-bg));
+        }
+
+        .score-info { text-align: right; }
+        .win-tag { color: var(--highlight); font-size: 0.9rem; font-weight: bold; }
+        .pom-tag { color: var(--ms-gold); font-style: italic; font-size: 0.85rem; }
+
+        /* Squads Grid */
+        .squad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .team-box { background: var(--card-bg); padding: 15px; border-radius: 10px; border: 1px solid #333; }
+        .team-box h3 { border-bottom: 1px solid var(--ms-gold); padding-bottom: 5px; color: var(--ms-gold); }
+        .team-box.ms-squad { border: 1px solid var(--highlight); background: #006a4e11; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .match-card { flex-direction: column; text-align: center; }
+            .score-info { text-align: center; margin-top: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>HBL PSL 2026</h1>
+    <p>Official Fan Dashboard | Sultan-e-Multan</p>
+</header>
+
+<div class="container">
+    <section class="today-match-card">
+        <h2>MATCH OF THE DAY</h2>
+        <div class="match-details" id="match-teams">Multan Sultans vs Hyderabad Kingsmen</div>
+        <p id="venue-info">Venue: Gaddafi Stadium, Lahore | 07:00 PM PKT</p>
+        
+        <div class="timer-box">
+            <div class="timer-unit"><span class="timer-val" id="hours">00</span><span class="timer-label">Hrs</span></div>
+            <div class="timer-unit"><span class="timer-val" id="mins">00</span><span class="timer-label">Min</span></div>
+            <div class="timer-unit"><span class="timer-val" id="secs">00</span><span class="timer-label">Sec</span></div>
+        </div>
+        <p style="font-size: 0.9rem; opacity: 0.8;">Starts In</p>
+    </section>
+
+    <div class="tabs">
+        <div class="tab-btn active" onclick="openTab('schedule')">Schedule & Results</div>
+        <div class="tab-btn" onclick="openTab('squads')">Squads</div>
+    </div>
+
+    <div id="schedule" class="tab-content active">
+        <div id="results-container">
+            <p style="text-align:center;">Fetching latest scores...</p>
+        </div>
+    </div>
+
+    <div id="squads" class="tab-content">
+        <div class="squad-grid">
+            <div class="team-box ms-squad">
+                <h3>Multan Sultans</h3>
+                <p><strong>C:</strong> Mohammad Rizwan</p>
+                <p>Iftikhar Ahmed, Usama Mir, Abbas Afridi, Reeza Hendricks, Dawid Malan, David Willey, Shahnawaz Dahani.</p>
+            </div>
+            <div class="team-box">
+                <h3>Lahore Qalandars</h3>
+                <p><strong>C:</strong> Shaheen Afridi</p>
+                <p>Fakhar Zaman, Haris Rauf, Rashid Khan, David Wiese, Sikandar Raza, Abdullah Shafique, Zaman Khan.</p>
+            </div>
+            <div class="team-box">
+                <h3>Karachi Kings</h3>
+                <p><strong>C:</strong> Shan Masood</p>
+                <p>Shoaib Malik, Kieron Pollard, Hasan Ali, Mohammad Nawaz, Tim Seifert, James Vince, Tabraiz Shamsi.</p>
+            </div>
+            <div class="team-box">
+                <h3>Peshawar Zalmi</h3>
+                <p><strong>C:</strong> Babar Azam</p>
+                <p>Saim Ayub, Rovman Powell, Tom Kohler-Cadmore, Naveen-ul-Haq, Luke Wood, Mohammad Haris.</p>
+            </div>
+            <div class="team-box">
+                <h3>Hyderabad Kingsmen</h3>
+                <p><strong>C:</strong> Aiden Markram</p>
+                <p>Quinton de Kock, Glenn Phillips, Marco Jansen, Naseem Shah (Draft), Imran Tahir, Haider Ali.</p>
+            </div>
+            <div class="team-box">
+                <h3>Islamabad United</h3>
+                <p><strong>C:</strong> Shadab Khan</p>
+                <p>Naseem Shah, Imad Wasim, Alex Hales, Colin Munro, Azam Khan, Hunain Shah, Jordan Cox.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. DATA: Simulation of PSL 2026 Match Data (As of April 1, 2026)
+    const pslData = [
+        { date: "Mar 26", teams: "Lahore Qalandars vs Hyderabad Kingsmen", score: "LQ: 199/6 | HK: 130/10", result: "LQ won by 69 runs", pom: "Fakhar Zaman" },
+        { date: "Mar 27", teams: "Quetta Gladiators vs Karachi Kings", score: "QG: 167/7 | KK: 181/7", result: "KK won by 14 runs", pom: "Moeen Ali" },
+        { date: "Mar 28", teams: "Peshawar Zalmi vs Rawalpindiz", score: "PZ: 218/5 | RP: 214/4", result: "PZ won by 5 wickets", pom: "Michael Bracewell" },
+        { date: "Mar 28", teams: "Multan Sultans vs Islamabad United", score: "MS: 175/5 | IU: 171/8", result: "MS won by 5 wickets", pom: "Momin Qamar" },
+        { date: "Mar 31", teams: "Islamabad United vs Peshawar Zalmi", score: "DNP", result: "Match Abandoned (Rain)", pom: "N/A" }
+    ];
+
+    // 2. Tab Logic
+    function openTab(tabName) {
+        const contents = document.getElementsByClassName("tab-content");
+        const buttons = document.getElementsByClassName("tab-btn");
+        for (let content of contents) content.classList.remove("active");
+        for (let btn of buttons) btn.classList.remove("active");
+        document.getElementById(tabName).classList.add("active");
+        event.currentTarget.classList.add("active");
+    }
+
+    // 3. Render Results
+    function renderResults() {
+        const container = document.getElementById('results-container');
+        container.innerHTML = "";
+        
+        pslData.reverse().forEach(match => {
+            const isMultan = match.teams.includes("Multan Sultans");
+            const card = document.createElement('div');
+            card.className = `match-card ${isMultan ? 'multan-sultans-highlight' : ''}`;
+            
+            card.innerHTML = `
+                <div>
+                    <small>${match.date}</small>
+                    <div style="font-weight:bold; font-size:1.1rem;">${match.teams}</div>
+                    <div class="pom-tag">PoM: ${match.pom}</div>
+                </div>
+                <div class="score-info">
+                    <div>${match.score}</div>
+                    <div class="win-tag">${match.result}</div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // 4. Countdown Logic (Target: Today 7:00 PM PKT)
+    function updateCountdown() {
+        // Set target to April 1, 2026, 19:00:00
+        const targetDate = new Date("April 1, 2026 19:00:00").getTime();
+        const now = new Date().getTime();
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+            document.querySelector(".timer-box").innerHTML = "<h3>MATCH LIVE NOW!</h3>";
+            return;
+        }
+
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+        document.getElementById("mins").innerText = mins.toString().padStart(2, '0');
+        document.getElementById("secs").innerText = secs.toString().padStart(2, '0');
+    }
+
+    // Initial Load
+    window.onload = () => {
+        renderResults();
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    };
+</script>
+
+</body>
+  </html>
+                     
